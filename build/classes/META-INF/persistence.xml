@@ -6,6 +6,8 @@
     <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
     <!-- Lista de entidades -->
     <class>com.model.bean.Jogadores</class>
+    <class>com.model.bean.Gm</class>
+    <class>com.model.bean.Banimento</class>
     <properties>
       <!-- Propriedades JDBC -->
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
