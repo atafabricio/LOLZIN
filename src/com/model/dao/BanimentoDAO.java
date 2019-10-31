@@ -50,7 +50,7 @@ public class BanimentoDAO {
         return ban;
     }
 
-    public Banimento findByID(Integer id) {
+    public Banimento findByID(Class<Banimento> clazz, Integer id) {
 
         EntityManager em = new ConnectionFactory().getConnection();
         Banimento ban = null;
@@ -65,6 +65,14 @@ public class BanimentoDAO {
 
         return ban;
 
+    }
+
+    public void update(Banimento ban) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void remove(Class<Banimento> clazz, Integer id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -5,101 +5,107 @@
  */
 package com.model.dao;
 
-import com.model.bean.Jogadores;
+import com.lolzin.daointerfaces.EntidadeBase;
+import com.lolzin.daointerfaces.GenericDAO;
 import com.connection.ConnectionFactory;
-import com.model.bean.Gm;
+import java.awt.HeadlessException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
+
 /**
  *
- * @author fabricio
+ * @author Fabricio
+ * @param <T>
  */
-public class GmDAO {
-     public Gm save(Gm vendedor) {
-        EntityManager em = new ConnectionFactory().getConnection();
+public class GenericDAOClass<T extends EntidadeBase> implements GenericDAO {
 
+    @Override
+    public void save(Object t) {
+        EntityManager em = new ConnectionFactory().getConnection();
         try {
             em.getTransaction().begin();
-            em.persist(vendedor);
+            em.persist(t);
             em.getTransaction().commit();
             JOptionPane.showMessageDialog(null, "Salvo com Sucesso");
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao Salvar " + e);
             em.getTransaction().rollback();
         } finally {
             em.close();
         }
-
-        return vendedor;
     }
+    
 
-    public Gm update(Gm vendedor) {
+    @Override
+    public void update(Object t) {
         EntityManager em = new ConnectionFactory().getConnection();
 
         try {
             em.getTransaction().begin();
-            em.merge(vendedor);
+            em.merge(t);
             em.getTransaction().commit();
             JOptionPane.showMessageDialog(null, "Atualizado com Sucesso");
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao Atualizar " + e);
             em.getTransaction().rollback();
         } finally {
             em.close();
         }
-
-        return vendedor;
     }
 
-    public Gm findByID(Class<Gm> clazz, Integer id) { //BUSCA OS USUARIOS CADASTRADOS
+    @Override
+    public void remove(Class clazz, Integer id) {
+                EntityManager em = new ConnectionFactory().getConnection();
+        Object t = null;
+        try {
+            t = em.find(clazz, id);
+            em.getTransaction().begin();
+            em.remove(t);
+            em.getTransaction().commit();
+            JOptionPane.showMessageDialog(null, "Removido com Sucesso");
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao remover " + e);
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
 
-        EntityManager em = new ConnectionFactory().getConnection();
-        Gm vendedor = null;
+    @Override
+    public List findALL(String clazz) {
+                EntityManager em = new ConnectionFactory().getConnection();
+        List<T> t = null;
 
         try {
-            vendedor = em.find(Gm.class, id);
+            t = em.createQuery("from " + clazz + " o").getResultList();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao Atualizar " + e);
+        } finally {
+            em.close();
+        }
+
+        return t;
+    }
+
+    @Override
+    public Object FindByID(Class clazz, Integer id) {
+        EntityManager em = new ConnectionFactory().getConnection();
+        Object t = null;
+
+        try {
+            t = em.find(clazz, id);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao Buscar " + e);
         } finally {
             em.close();
         }
 
-        return vendedor;
+        return t;
 
     }
 
-    public List<Gm> FindAll() {
-        EntityManager em = new ConnectionFactory().getConnection();
-        List<Gm> jogador = null;
 
-        try {
-            jogador = em.createQuery("from Gm v").getResultList();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao Atualizar " + e);
-        } finally {
-            em.close();
-        }
 
-        return jogador;
-    }
-
-    public Gm remove(Integer id) {
-        EntityManager em = new ConnectionFactory().getConnection();
-        Gm jogador = null;
-        try {
-            jogador = em.find(Gm.class, id);
-            em.getTransaction().begin();
-            em.remove(jogador);
-            em.getTransaction().commit();
-            JOptionPane.showMessageDialog(null, "Removido com Sucesso");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao remover " + e);
-            em.getTransaction().rollback();
-        } finally {
-            em.close();
-        }
-
-        return jogador;
-    }
+    
 }

@@ -5,6 +5,7 @@
  */
 package com.model.bean;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +17,7 @@ import javax.persistence.ManyToOne;
  * @author Fabricio
  */
 @Entity
-public class Banimento {
+public class Banimento implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
